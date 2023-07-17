@@ -4,54 +4,6 @@ cnvrg.io is a machine learning platform that streamlines the development and dep
 
 Using the cnvrg.io platform, it is easy to run a stable diffusion model and generate your own custom image.
 
-## Steps
-
-1. Login to your account.
-![Login Image](<IMAGE_PATH>)
-
-2. Once you’ve entered cnvrg.io, click on resource on the left side.
-![Resource Image](<IMAGE_PATH>)
-
-3. In cnvrg.io you are able to connect any kind of workload to the platform. Make sure you have Gaudi HPU integrated in your environment.
-![Environment Image](<IMAGE_PATH>)
-
-4. Create a template to assign the relevant number of CPU, Memory, and HPU.
-![Template Image](<IMAGE_PATH>)
-
-5. Provide input title name - Gaudi Small. Insert the provided details.
-   - CPU: 8
-   - Memory: 16
-   - HPU: 1
-
-   And click on save.
-![Save Image](<IMAGE_PATH>)
-
-6. Bring your own container. Click on "Add Image". Choose "Pull image". Provide the relevant information:
-   - Image: `https://vault.habana.ai/gaudi-docker/1.10.0/amzn2/habanalabs/pytorch-installer-2.0.1:latest`
-   - Registry: Habana
-
-   Click on the Add button.
-![Add Image](<IMAGE_PATH>)
-
-7. Start your project - let's bring the code into a working project.
-![Project Image](<IMAGE_PATH>)
-
-8. Click on the blue 'new workspace' button to start a jupyterlab workspace so we can easily create, edit, and run code.
-![Workspace Image](<IMAGE_PATH>)
-
-9. Next, the workspace will start loading and you will see a screen like this:
-![Loading Image](<IMAGE_PATH>)
-
-10. Now click on the terminal option to start a terminal so you can clone the git repository for stable diffusion.
-![Terminal Image](<IMAGE_PATH>)
-
-11. Run the following commands:
-    ```bash
-    > hl-sami
-    ```
-    This is how it looks like when you allocate 1 HPU and 2 HPU.
-    ![HPU Image](<IMAGE_PATH>)
-
 # Stable Diffusion 2.1 for PyTorch
 
 This directory provides scripts to perform text-to-image inference on a stable diffusion 2.1 model and is tested and maintained by Habana.
