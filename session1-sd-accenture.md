@@ -1,111 +1,94 @@
-# Workshop: Run Stable Diffusion in cnvrg.io: A Step by Step Guide with Gaudi
+# Workshop - Run Stable Diffusion in cnvrg.io: A Step by Step Guide with Gaudi
 
-cnvrg.io is a machine learning platform that streamlines the development and deployment of machine learning models. It provides tools for version control, collaboration, model training, and deployment, allowing data scientists and machine learning engineers to focus on building and improving models, rather than worrying about infrastructure and other technical details.
+cnvrg.io is a comprehensive machine learning platform that provides tools for model development, deployment, version control, and collaboration. It's designed to empower data scientists and machine learning engineers, allowing them to focus on improving models instead of managing infrastructure.
 
-Using the cnvrg.io platform, it is easy to run a stable diffusion model and generate your own custom image.
+In this guide, you'll learn how to run a Stable Diffusion 2.1 model on cnvrg.io and generate custom images.
 
 # Stable Diffusion 2.1 for PyTorch
 
-This directory provides scripts to perform text-to-image inference on a stable diffusion 2.1 model and is tested and maintained by Habana.
+In this directory, you'll find scripts for running text-to-image inference using a Stable Diffusion 2.1 model. This model is tested and maintained by Habana.
 
-For more information on training and inference of deep learning models using Gaudi, refer to [developer.habana.ai](https://developer.habana.ai/resources/).
+To learn more about training and inference of deep learning models using Gaudi, visit [developer.habana.ai](https://developer.habana.ai/resources/).
 
 ## Table of Contents
 
-* [Model-References](../../../README.md)
 * [Model Overview](#model-overview)
-* [Setup](#setup)
+* [Setup Instructions](#setup-instructions)
 * [Model Checkpoint](#model-checkpoint)
 * [Inference and Examples](#inference-and-examples)
-* [Supported Configuration](#supported-configuration)
+* [Supported Configurations](#supported-configurations)
 * [Changelog](#changelog)
 * [Known Issues](#known-issues)
 
 ## Model Overview
-This implementation is based on the following paper - [High-Resolution Image Synthesis with Latent Diffusion Models](https://arxiv.org/abs/2112.10752).
 
-### How to use
-Users acknowledge and understand that the models referenced by Habana are mere examples for models that can be run on Gaudi.
-Users bear sole liability and responsibility to follow and comply with any third party licenses pertaining to such models,
-and Habana Labs disclaims and will bear no any warranty or liability with respect to users' use or compliance with such third party licenses.
+This implementation is based on the [High-Resolution Image Synthesis with Latent Diffusion Models](https://arxiv.org/abs/2112.10752) paper. Users must comply with any third-party licenses related to these models.
 
-## Setup
-Please follow the instructions provided in the [Gaudi Installation Guide](https://docs.habana.ai/en/latest/Installation_Guide/index.html) 
-to set up the environment including the `$PYTHON` environment variable. To achieve the best performance, please follow the methods outlined in the [Optimizing Training Platform guide](https://docs.habana.ai/en/latest/PyTorch/Model_Optimization_PyTorch/Optimization_in_Training_Platform.html).
-The guides will walk you through the process of setting up your system to run the model on Gaudi.  
+## Setup Instructions
 
-### Clone Habana Model-References
-In the docker container, clone this repository and switch to the branch that matches your SynapseAI version.
-You can run the [`hl-smi`](https://docs.habana.ai/en/latest/System_Management_Tools_Guide/System_Management_Tools.html#hl-smi-utility-options) utility to determine the SynapseAI version.
-```bash
-git clone -b master https://github.com/HabanaAI/Model-References
+1. Set up your environment by following the instructions in the [Gaudi Installation Guide](https://docs.habana.ai/en/latest/Installation_Guide/index.html). Make sure to set the `$PYTHON` environment variable.
 
-### Install Model Requirements
-1. In the docker container, go to the model directory:
-```bash
-cd Model-References/PyTorch/generative_models/stable-diffusion-v-2-1
+2. Clone the Habana Model-References repository and switch to the branch that matches your SynapseAI version:
+    ```bash
+    git clone -b master https://github.com/HabanaAI/Model-References
+    ```
 
-2. Install the required packages using pip.
-```bash
-pip install -r requirements.txt --user
-```
+3. In the docker container, navigate to the model directory:
+    ```bash
+    cd Model-References/PyTorch/generative_models/stable-diffusion-v-2-1
+    ```
+
+4. Install the required packages:
+    ```bash
+    pip install -r requirements.txt --user
+    ```
 
 ## Model Checkpoint
-### Text-to-Image
-Download the pre-trained weights for 768x768 images (4.9GB)
-```bash
-wget https://huggingface.co/stabilityai/stable-diffusion-2-1/resolve/main/v2-1_768-ema-pruned.ckpt
-```
-and/or 512x512 images (4.9GB).
-```bash
-wget https://huggingface.co/stabilityai/stable-diffusion-2-1-base/resolve/main/v2-1_512-ema-pruned.ckpt
-```
+
+Download the pre-trained weights for 768x768 and/or 512x512 images:
+
+* For 768x768 images:
+    ```bash
+    wget https://huggingface.co/stabilityai/stable-diffusion-2-1/resolve/main/v2-1_768-ema-pruned.ckpt
+    ```
+
+* For 512x512 images:
+    ```bash
+    wget https://huggingface.co/stabilityai/stable-diffusion-2-1-base/resolve/main/v2-1_512-ema-pruned.ckpt
+    ```
 
 ## Inference and Examples
-The following command generates a total of 3 images of size 768x768 and saves each sample individually as well as a grid of size `n_iter` x `n_samples` at the specified output location (default: `outputs/txt2img-samples`).
 
-```bash
-python3 scripts/txt2img.py --prompt "a professional photograph of an astronaut riding a horse" --ckpt v2-1_768-ema-pruned.ckpt --config configs/stable-diffusion/v2-inference-v.yaml --H 768 --W 768 --n_samples 1 --n_iter 3 --use_hpu_graph
-```
-To generate 3 images of a 512x512 size using a k-diffusion dpmpp_2m sampler with 35 steps, use the command:
-```bash
-python3 scripts/txt2img.py --prompt "a professional photograph of an astronaut riding a horse" --ckpt v2-1_512-ema-pruned.ckpt --config configs/stable-diffusion/v2-inference.yaml --H 512 --W 512 --n_samples 1 --n_iter 3 --steps 35 --k_sampler dpmpp_2m --use_hpu_graph
-```
+Generate images using the following command (default output location: `outputs/txt2img-samples`):
 
-For a more detailed description of parameters, please use the following command to see a help message:
-```bash
-python3 scripts/txt2img.py -h
-```
+* For 768x768 images:
+    ```bash
+    python3 scripts/txt2img.py --prompt "a professional photograph of an astronaut riding a horse" --ckpt v2-1_768-ema-pruned.ckpt --config configs/stable-diffusion/v2-inference-v.yaml --H 768 --W 768 --n_samples 1 --n_iter 3 --use_hpu_graph
+    ```
 
-## Performance
-The first two batches of images generate a performance penalty.
-All subsequent batches will be generated much faster.
+* For 512x512 images:
+    ```bash
+    python3 scripts/txt2img.py --prompt "a professional photograph of an astronaut riding a horse" --ckpt v2-1_512-ema-pruned.ckpt --config configs/stable-diffusion/v2-inference.yaml --H 512 --W 512 --n_samples 1 --n_iter 3 --steps 35 --k_sampler dpmpp_2m --use_hpu_graph
+    ```
 
-## Supported Configuration
+For a detailed description of parameters, view the help message:
+    ```bash
+    python3 scripts/txt2img.py -h
+    ```
+
+## Supported Configurations
+
 | Validated on  | SynapseAI Version | PyTorch Version | Mode |
 |---------|-------------------|-----------------|----------------|
 | Gaudi   | 1.10.0             | 2.0.1          | Inference |
 | Gaudi2   | 1.10.0             | 2.0.1          | Inference |
 
 ## Changelog
-### 1.8.0
-Initial release.
 
-### 1.10.0
-Decreased host overhead to minimum by rewriting samplers and the main sampling loop.
-
-### Script Modifications
-Major changes done to the original model from [Stability-AI/stablediffusion](https://github.com/Stability-AI/stablediffusion/tree/d55bcd4d31d0316fcbdf552f2fd2628fdc812500) repository:
-* Changed README.
-* Added HPU support.
-* Modified configs/stable-diffusion/v2-inference-v.yaml and configs/stable-diffusion/v2-inference.yaml
-* Changed code around einsum operation in ldm/modules/attention.py
-* randn moved to cpu in scripts/txt2img.py and ldm/models/diffusion/ddim.py
-* Sampling is rewritten in an accelerator-friendly way
+* 1.10.0: Decreased host overhead by rewriting samplers and the main sampling loop.
+* 1.8.0: Initial release.
 
 ## Known Issues
-* Initial random noise generation has been moved to CPU.
-Contrary to when noise is generated on Gaudi, CPU-generated random noise produces consistent output regardless of whether HPU Graph API is used or not.
-* The model supports batch sizes up to 16 on Gaudi and up to 8 on Gaudi2 for output images 512x512px, and batch size 1 for images 768x768px on Gaudi and Gaudi2.
 
-
+* Initial random noise generation has been moved to CPU to ensure consistent output.
+* The model supports batch sizes up to 16 on Gaudi and up to 8 on Gaudi2 for 512x512px images, and batch size 1 for 768x768px images on Gaudi and Gaudi2.
